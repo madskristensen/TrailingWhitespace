@@ -18,13 +18,14 @@ namespace TrailingWhitespace
         {
             IList<ClassificationSpan> list = new List<ClassificationSpan>();
 
-            string text = span.GetText();
+            ITextSnapshotLine line = span.Snapshot.GetLineFromPosition(span.Start.Position);
+            string text = span.Snapshot.GetText(line.Start.Position, line.Length);
             string trimmed = text.TrimEnd();
             int diff = text.Length - trimmed.Length;
 
             if (diff > 0)
             {
-                SnapshotSpan ss = new SnapshotSpan(span.Snapshot, span.Start.Position + text.Length - diff, diff);
+                SnapshotSpan ss = new SnapshotSpan(span.Snapshot, line.Start + line.Length - diff, diff);
                 list.Add(new ClassificationSpan(ss, _whitespace));
             }
 
