@@ -18,9 +18,9 @@ namespace TrailingWhitespace
     [Name(TrailingClassificationTypes.Whitespace)]
     [Order(After = Priority.Default)]
     [UserVisible(true)]
-    internal sealed class AppCacheKeywordsFormatDefinition : ClassificationFormatDefinition
+    internal sealed class TrailingWhitespaceFormatDefinition : ClassificationFormatDefinition
     {
-        public AppCacheKeywordsFormatDefinition()
+        public TrailingWhitespaceFormatDefinition()
         {
             BackgroundColor = Color.FromRgb(255, 145, 145);
             DisplayName = "Trailing Whitespace";
