@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using EnvDTE80;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
@@ -8,10 +10,12 @@ namespace TrailingWhitespace
     public class TrailingClassifier : IClassifier
     {
         private IClassificationType _whitespace;
+        private DTE2 _dte;
 
-        public TrailingClassifier(IClassificationTypeRegistryService registry)
+        public TrailingClassifier(IClassificationTypeRegistryService registry, DTE2 dte)
         {
             _whitespace = registry.GetClassificationType(TrailingClassificationTypes.Whitespace);
+            _dte = dte;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -23,13 +27,38 @@ namespace TrailingWhitespace
             string trimmed = text.TrimEnd();
             int diff = text.Length - trimmed.Length;
 
-            if (diff > 0 && trimmed.Length > 0)
+            if (diff > 0 && IsEmptyLinesSupported(trimmed.Length, span.Snapshot.TextBuffer))
             {
                 SnapshotSpan ss = new SnapshotSpan(span.Snapshot, line.Start + line.Length - diff, diff);
                 list.Add(new ClassificationSpan(ss, _whitespace));
             }
 
             return list;
+        }
+
+        private readonly List<string> _ext = new List<string>
+        {
+            ".cshtml",
+            ".vbhtml",
+            ".html",
+            ".htm",
+            ".aspx",
+            ".ascx",
+            ".master",
+        };
+
+        private bool IsEmptyLinesSupported(int length, ITextBuffer buffer)
+        {
+            if (length > 0)
+                return true;
+
+            var doc = _dte.ActiveDocument;
+            if (doc == null)
+                return false;
+
+            return buffer.ContentType.IsOfType("html") ||
+                   buffer.ContentType.IsOfType("htmlx") ||
+                   !_ext.Contains(Path.GetExtension(doc.FullName));
         }
 
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged
