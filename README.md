@@ -1,5 +1,7 @@
 ## Trailing Whitespace extension for VS2012/2013
 
+[![Build status](https://ci.appveyor.com/api/projects/status/2n9cfl1lups6o7q4)](https://ci.appveyor.com/project/madskristensen/trailingwhitespace)
+
 This extension will highlight any trailing whitespace on any line
 in any editor in Visual Studio.
 
