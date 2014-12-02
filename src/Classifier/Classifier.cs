@@ -4,7 +4,6 @@ using System.IO;
 using EnvDTE80;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Text.Projection;
 
 namespace TrailingWhitespace
 {
