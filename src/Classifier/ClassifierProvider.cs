@@ -10,7 +10,7 @@ namespace TrailingWhitespace
 {
     [Export(typeof(IClassifierProvider))]
     [ContentType("code")]
-    public class TrailingClassifierProvider : IClassifierProvider
+    class TrailingClassifierProvider : IClassifierProvider
     {
         [Import]
         public IClassificationTypeRegistryService Registry { get; set; }

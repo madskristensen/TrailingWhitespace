@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace TrailingWhitespace
 {
-    public class TrailingClassifier : IClassifier
+    class TrailingClassifier : IClassifier
     {
         private IClassificationType _whitespace;
         private DTE2 _dte;
@@ -62,10 +62,6 @@ namespace TrailingWhitespace
                    !_ext.Contains(Path.GetExtension(doc.FullName));
         }
 
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged
-        {
-            add { }
-            remove { }
-        }
+        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged { add { } remove { } }
     }
 }

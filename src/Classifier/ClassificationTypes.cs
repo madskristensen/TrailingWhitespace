@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace TrailingWhitespace
 {
-    public static class TrailingClassificationTypes
+    static class TrailingClassificationTypes
     {
         public const string Whitespace = "TrailingWhitespace";
 
@@ -18,7 +18,7 @@ namespace TrailingWhitespace
     [Name(TrailingClassificationTypes.Whitespace)]
     [Order(After = Priority.Default)]
     [UserVisible(true)]
-    internal sealed class TrailingWhitespaceFormatDefinition : ClassificationFormatDefinition
+    sealed class TrailingWhitespaceFormatDefinition : ClassificationFormatDefinition
     {
         public TrailingWhitespaceFormatDefinition()
         {
