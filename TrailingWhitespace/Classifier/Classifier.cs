@@ -4,6 +4,7 @@ using System.IO;
 using EnvDTE80;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using Microsoft.VisualStudio.Text.Projection;
 
 namespace TrailingWhitespace
 {
@@ -56,8 +57,8 @@ namespace TrailingWhitespace
             if (doc == null)
                 return false;
 
-            return buffer.ContentType.IsOfType("html") ||
-                   buffer.ContentType.IsOfType("htmlx") ||
+            return buffer.ContentType.IsOfType("html") ||  // Web Forms
+                   buffer.ContentType.IsOfType("htmlx") || // HTML/Razor
                    !_ext.Contains(Path.GetExtension(doc.FullName));
         }
 

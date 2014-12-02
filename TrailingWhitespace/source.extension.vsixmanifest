@@ -4,7 +4,7 @@
         <Identity Id="4c1a78e6-e7b8-4aa9-8812-4836e051ff6d" Version="1.6" Language="en-US" Publisher="Mads Kristensen" />
         <DisplayName>Trailing Whitespace Visualizer</DisplayName>
         <Description xml:space="preserve">Makes it easier than ever to identify trailing whitespace in any code file</Description>
-        <License>License.txt</License>
+        <License>Resources\License.txt</License>
         <Icon>Resources\logo.png</Icon>
         <PreviewImage>Resources\preview.png</PreviewImage>
         <Tags>whitespace</Tags>

@@ -56,10 +56,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ClassificationTypes.cs" />
-    <Compile Include="Classifier.cs" />
+    <Compile Include="Classifier\ClassificationTypes.cs" />
+    <Compile Include="Classifier\Classifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ClassifierProvider.cs" />
+    <Compile Include="Classifier\ClassifierProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -87,8 +87,9 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="License.txt">
+    <Content Include="Resources\License.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\logo.png">
       <IncludeInVSIX>true</IncludeInVSIX>
