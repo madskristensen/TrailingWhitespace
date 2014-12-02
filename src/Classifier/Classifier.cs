@@ -59,6 +59,7 @@ namespace TrailingWhitespace
 
             return buffer.ContentType.IsOfType("html") ||  // Web Forms
                    buffer.ContentType.IsOfType("htmlx") || // HTML/Razor
+                   buffer.ContentType.IsOfType("markdown") ||
                    !_ext.Contains(Path.GetExtension(doc.FullName));
         }
 
