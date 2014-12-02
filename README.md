@@ -1,4 +1,4 @@
-## Trailing Whitespace extension for VS2012/2013
+## Trailing Whitespace extension for VS2012/2013/2015
 
 [![Build status](https://ci.appveyor.com/api/projects/status/2n9cfl1lups6o7q4)](https://ci.appveyor.com/project/madskristensen/trailingwhitespace)
 
