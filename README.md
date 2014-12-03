@@ -7,6 +7,11 @@ in any editor in Visual Studio.
 
 Download and install the extension from the VS Gallery here: http://visualstudiogallery.msdn.microsoft.com/a204e29b-1778-4dae-affd-209bea658a59
 
+#### Remove trailing whitespace
+
+You can very easily delete all the trailing whitespace in a file by executing the **Delete Horizontal White Space** command
+found in **Edit** -> **Advanced** or by using the shortcut key combination Ctrl+K, Ctrl+\
+
 #### Changing the background color
 
 You can change the background color from the **Tools -> Options** dialog under the **Environment -> Fonts and Colors** settings. The setting is for the *Text Editor* and the display item is called *Trailing Whitespace*.
