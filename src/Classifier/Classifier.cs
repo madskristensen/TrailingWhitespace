@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using EnvDTE80;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
@@ -10,12 +9,12 @@ namespace TrailingWhitespace
     class TrailingClassifier : IClassifier
     {
         private IClassificationType _whitespace;
-        private DTE2 _dte;
+        private ITextDocument _document;
 
-        public TrailingClassifier(IClassificationTypeRegistryService registry, DTE2 dte)
+        public TrailingClassifier(IClassificationTypeRegistryService registry, ITextDocument document)
         {
             _whitespace = registry.GetClassificationType(TrailingClassificationTypes.Whitespace);
-            _dte = dte;
+            _document = document;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -52,14 +51,13 @@ namespace TrailingWhitespace
             if (length > 0)
                 return true;
 
-            var doc = _dte.ActiveDocument;
-            if (doc == null)
+            if (_document == null || string.IsNullOrEmpty(_document.FilePath))
                 return false;
 
             return buffer.ContentType.IsOfType("html") ||  // Web Forms
                    buffer.ContentType.IsOfType("htmlx") || // HTML/Razor
                    buffer.ContentType.IsOfType("markdown") ||
-                   !_ext.Contains(Path.GetExtension(doc.FullName));
+                   !_ext.Contains(Path.GetExtension(_document.FilePath));
         }
 
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged { add { } remove { } }
