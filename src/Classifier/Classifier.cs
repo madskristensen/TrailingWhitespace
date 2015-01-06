@@ -10,6 +10,7 @@ namespace TrailingWhitespace
     {
         private IClassificationType _whitespace;
         private ITextDocument _document;
+        private static IList<ClassificationSpan> _empty = new List<ClassificationSpan>();
 
         public TrailingClassifier(IClassificationTypeRegistryService registry, ITextDocument document)
         {
@@ -19,9 +20,12 @@ namespace TrailingWhitespace
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            IList<ClassificationSpan> list = new List<ClassificationSpan>();
+            if (span.IsEmpty)
+                return _empty;
 
+            IList<ClassificationSpan> list = new List<ClassificationSpan>();
             ITextSnapshotLine line = span.Snapshot.GetLineFromPosition(span.Start.Position);
+
             string text = line.GetText();
             string trimmed = text.TrimEnd();
             int diff = text.Length - trimmed.Length;

@@ -72,8 +72,6 @@ namespace TrailingWhitespace
                 {
                     _dte.UndoContext.Close();
                 }
-
-                //return 0;
             }
 
             return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
@@ -86,12 +84,12 @@ namespace TrailingWhitespace
             if (!buffer.Properties.TryGetProperty(typeof(TrailingClassifier), out classifier))
                 return;
 
-            foreach (var line in _view.TextViewLines)
+            foreach (var line in buffer.CurrentSnapshot.Lines)
             {
-                if (line.Start.Position + line.Length > buffer.CurrentSnapshot.Length)
+                if (line.Start + line.LengthIncludingLineBreak > buffer.CurrentSnapshot.Length)
                     continue;
 
-                var ss = new SnapshotSpan(buffer.CurrentSnapshot, line.Start.Position, line.Length);
+                var ss = new SnapshotSpan(buffer.CurrentSnapshot, line.Start, line.LengthIncludingLineBreak);
                 var spans = classifier.GetClassificationSpans(ss);
 
                 foreach (var span in spans)
