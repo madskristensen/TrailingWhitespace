@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
 
@@ -8,6 +9,7 @@ namespace TrailingWhitespace
 {
     [Export(typeof(IClassifierProvider))]
     [ContentType("code")]
+    [TextViewRole(PredefinedTextViewRoles.Editable)]
     class TrailingClassifierProvider : IClassifierProvider
     {
         [Import]

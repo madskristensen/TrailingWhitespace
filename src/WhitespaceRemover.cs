@@ -16,6 +16,7 @@ namespace TrailingWhitespace
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("code")]
     [TextViewRole(PredefinedTextViewRoles.Document)]
+    [TextViewRole(PredefinedTextViewRoles.Editable)]
     class WhitespaceRemover : IVsTextViewCreationListener
     {
         [Import]
