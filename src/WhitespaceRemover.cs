@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 
@@ -51,28 +50,27 @@ namespace TrailingWhitespace
         {
             if (pguidCmdGroup == new Guid("1496A755-94DE-11D0-8C3F-00C04FC2AAE2") && nCmdID == 64)
             {
-                var projection = _view.TextBuffer as IProjectionBuffer;
+                ITextBuffer buffer = _view.TextBuffer;
 
-                try
+                if (!buffer.CheckEditAccess())
+                    return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+
+                ITextEdit edit = buffer.CreateEdit();
+                ITextSnapshot snap = edit.Snapshot;
+
+                foreach (ITextSnapshotLine line in snap.Lines)
                 {
-                    _dte.UndoContext.Open("Remove trailing whitespace");
-
-                    if (projection != null)
+                    string text = line.GetText();
+                    int length = text.Length;
+                    while (--length >= 0 && Char.IsWhiteSpace(text[length])) ;
+                    if (length < text.Length - 1)
                     {
-                        foreach (var buffer in projection.SourceBuffers)
-                        {
-                            RemoveTrailingWhitespace(buffer);
-                        }
-                    }
-                    else
-                    {
-                        RemoveTrailingWhitespace(_view.TextBuffer);
+                        int start = line.Start.Position;
+                        edit.Delete(start + length + 1, text.Length - length - 1);
                     }
                 }
-                finally
-                {
-                    _dte.UndoContext.Close();
-                }
+
+                edit.Apply();
             }
 
             return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
