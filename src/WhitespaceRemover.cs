@@ -52,10 +52,20 @@ namespace TrailingWhitespace
             {
                 ITextBuffer buffer = _view.TextBuffer;
 
-                if (!buffer.CheckEditAccess())
-                    return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+                if (buffer.CheckEditAccess())
+                {
+                    RemoveTrailingWhitespace(buffer);
+                    return 0;
+                }
+            }
 
-                ITextEdit edit = buffer.CreateEdit();
+            return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+        }
+
+        private void RemoveTrailingWhitespace(ITextBuffer buffer)
+        {
+            using (ITextEdit edit = buffer.CreateEdit())
+            {
                 ITextSnapshot snap = edit.Snapshot;
 
                 foreach (ITextSnapshotLine line in snap.Lines)
@@ -71,30 +81,6 @@ namespace TrailingWhitespace
                 }
 
                 edit.Apply();
-            }
-
-            return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
-        }
-
-        private void RemoveTrailingWhitespace(ITextBuffer buffer)
-        {
-            TrailingClassifier classifier;
-
-            if (!buffer.Properties.TryGetProperty(typeof(TrailingClassifier), out classifier))
-                return;
-
-            foreach (var line in buffer.CurrentSnapshot.Lines)
-            {
-                if (line.Start + line.LengthIncludingLineBreak > buffer.CurrentSnapshot.Length)
-                    continue;
-
-                var ss = new SnapshotSpan(buffer.CurrentSnapshot, line.Start, line.LengthIncludingLineBreak);
-                var spans = classifier.GetClassificationSpans(ss);
-
-                foreach (var span in spans)
-                {
-                    buffer.Delete(span.Span);
-                }
             }
         }
 
