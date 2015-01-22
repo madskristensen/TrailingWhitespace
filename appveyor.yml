@@ -15,7 +15,7 @@ before_build:
 
     $version = $vsixXml.SelectSingleNode("//ns:Identity", $ns) | select Version
     
-    $version.Value += $env:APPVEYOR_BUILD_NUMBER
+    $version = $version + "." + $env:APPVEYOR_BUILD_NUMBER
 
     $vsixXml.Save($vsixFilePathToUpdate);
 
