@@ -5,7 +5,12 @@
 This extension will highlight any trailing whitespace on any line
 in any editor in Visual Studio.
 
-Download and install the extension from the VS Gallery here: http://visualstudiogallery.msdn.microsoft.com/a204e29b-1778-4dae-affd-209bea658a59
+Download and install the extension from the 
+[Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/a204e29b-1778-4dae-affd-209bea658a59) 
+or get the 
+[nightly build](https://ci.appveyor.com/project/madskristensen/trailingwhitespace/build/artifacts). 
+
+![C# whitespace](https://github.com/madskristensen/TrailingWhitespace/blob/master/artifacts/CSharp.png)
 
 #### Remove trailing whitespace
 
