@@ -5,6 +5,8 @@ platform: Any CPU
 
 before_build: 
 - ps: >-
+    $env:VSIX = Resolve-Path (Get-ChildItem ./**/bin/*.vsix -Recurse | Select-Object -First 1) -Relative
+
     $vsixFilePathToUpdate = Resolve-Path "*\source.extension.vsixmanifest"
 
     [string]$build = $env:APPVEYOR_BUILD_NUMBER
@@ -26,5 +28,5 @@ before_build:
 build:
   verbosity: minimal
 artifacts:
-- path: src/bin/CI/TrailingWhitespace.vsix
+- path: $(VSIX)
   name: Nightly Build
