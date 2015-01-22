@@ -8,12 +8,22 @@ before_build:
     $vsixFilePathToUpdate = ".\src\source.extension.vsixmanifest"
 
     [string]$build = $env:APPVEYOR_BUILD_NUMBER
+
     [xml]$vsixXml = (Get-Content $vsixFilePathToUpdate)
 
+
+
     $identityElem = $vsixXml.ChildNodes[1].FirstChild.FirstChild
+
+
     $versionAttr = $identityElem.GetAttribute("Version")
+
+
     $identityElem.SetAttribute("Version", $versionAttr + "." + $build)
+
+
     $vsixXml.Save("{0}\\$vsixFilePathToUpdate" -f (get-location));
+
 
 build:
   verbosity: minimal
