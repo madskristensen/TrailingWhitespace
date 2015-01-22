@@ -7,19 +7,15 @@ before_build:
 - ps: >-
     $vsixFilePathToUpdate = Resolve-Path "*\source.extension.vsixmanifest"
 
-    [string]$build = $env:APPVEYOR_BUILD_NUMBER
-
     [xml]$vsixXml = (Get-Content $vsixFilePathToUpdate)
 
     $ns = New-Object System.Xml.XmlNamespaceManager $vsixXml.NameTable
 
     $ns.AddNamespace("ns", $vsixXml.DocumentElement.NamespaceURI)
 
-    $identityElem = $vsixXml.SelectSingleNode("//ns:Identity", $ns)
-
-    $versionAttr = $identityElem.GetAttribute("Version")
-
-    $identityElem.SetAttribute("Version", $versionAttr + "." + $build)
+    $version = $vsixXml.SelectSingleNode("//ns:Identity", $ns) | select Version
+    
+    $version.Value += $env:APPVEYOR_BUILD_NUMBER
 
     $vsixXml.Save($vsixFilePathToUpdate);
 
