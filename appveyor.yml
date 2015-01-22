@@ -3,17 +3,24 @@ version: 1.0.{build}
 configuration: CI
 platform: Any CPU
 
-before_build: |
-    $vsixFilePathToUpdate = ".\src\source.extension.vsixmanifest"
+before_build: 
+- ps: >-
+    $vsixFilePathToUpdate = "*\source.extension.vsixmanifest"
 
     [string]$build = $env:APPVEYOR_BUILD_NUMBER
+    
     [xml]$vsixXml = (Get-Content $vsixFilePathToUpdate)
+    
     $ns = New-Object System.Xml.XmlNamespaceManager $vsixXml.NameTable
+    
     $ns.AddNamespace("ns", $vsixXml.DocumentElement.NamespaceURI)
 
     $identityElem = $vsixXml.SelectSingleNode("//ns:Identity", $ns)
+    
     $versionAttr = $identityElem.GetAttribute("Version")
+    
     $identityElem.SetAttribute("Version", $versionAttr + "." + $build)
+    
     $vsixXml.Save("{0}\\$vsixFilePathToUpdate" -f (get-location));
 
 build:
