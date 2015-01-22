@@ -8,7 +8,10 @@ before_build: |
 
     [string]$build = $env:APPVEYOR_BUILD_NUMBER
     [xml]$vsixXml = (Get-Content $vsixFilePathToUpdate)
-    $identityElem = $vsixXml.ChildNodes[1].FirstChild.FirstChild
+    $ns = New-Object System.Xml.XmlNamespaceManager $vsixXml.NameTable
+    $ns.AddNamespace("ns", $vsixXml.DocumentElement.NamespaceURI)
+
+    $identityElem = $vsixXml.SelectSingleNode("//ns:Identity", $ns)
     $versionAttr = $identityElem.GetAttribute("Version")
     $identityElem.SetAttribute("Version", $versionAttr + "." + $build)
     $vsixXml.Save("{0}\\$vsixFilePathToUpdate" -f (get-location));
