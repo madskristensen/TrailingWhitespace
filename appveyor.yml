@@ -4,7 +4,7 @@ configuration: CI
 platform: Any CPU
 
 before_build: |
-    & { 
+    if ($true) {
         $vsixFilePathToUpdate = Resolve-Path "*\source.extension.vsixmanifest"
         [string]$build = $env:APPVEYOR_BUILD_NUMBER
         [xml]$vsixXml = (Get-Content $vsixFilePathToUpdate)
