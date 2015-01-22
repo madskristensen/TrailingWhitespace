@@ -1,0 +1,10 @@
+version: 1.0.{build}
+
+configuration: CI
+platform: Any CPU
+
+build:
+  verbosity: minimal
+artifacts:
+- path: src/bin/CI/TrailingWhitespace.vsix
+  name: Nightly Build
