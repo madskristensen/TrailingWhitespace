@@ -13,9 +13,7 @@ before_build:
 
     $ns.AddNamespace("ns", $vsixXml.DocumentElement.NamespaceURI)
 
-    $version = $vsixXml.SelectSingleNode("//ns:Identity", $ns) | select Version
-    
-    $version = $version + "." + $env:APPVEYOR_BUILD_NUMBER
+    $vsixXml.SelectSingleNode("//ns:Identity", $ns).Attributes["Version"].Value += "." + $env:APPVEYOR_BUILD_NUMBER
 
     $vsixXml.Save($vsixFilePathToUpdate);
 
