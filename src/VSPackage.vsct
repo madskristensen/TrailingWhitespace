@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <Extern href="stdidcmd.h"/>
+    <Extern href="vsshlids.h"/>
+
+    <Commands package="guidVSPackage">
+    </Commands>
+
+    <Symbols>
+        <!-- This is the package guid. -->
+        <GuidSymbol name="guidVSPackage" value="{043286da-34d9-44a7-93eb-16a775cfcf61}" />
+
+        <GuidSymbol name="guidVSPackageCmdSet" value="{3ff85586-1fd8-4018-a861-5012505d6f3a}">
+        </GuidSymbol>
+    </Symbols>
+</CommandTable>

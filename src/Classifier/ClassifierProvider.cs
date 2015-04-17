@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace TrailingWhitespace
 {
     [Export(typeof(IClassifierProvider))]
-    [ContentType("code")]
+    [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
     class TrailingClassifierProvider : IClassifierProvider
     {

@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
@@ -12,34 +13,13 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace TrailingWhitespace
 {
-    [Export(typeof(IVsTextViewCreationListener))]
-    [ContentType("code")]
-    [TextViewRole(PredefinedTextViewRoles.Document)]
-    [TextViewRole(PredefinedTextViewRoles.Editable)]
-    class WhitespaceRemover : IVsTextViewCreationListener
-    {
-        [Import]
-        public IVsEditorAdaptersFactoryService EditorAdaptersFactoryService { get; set; }
-
-        [Import]
-        public SVsServiceProvider serviceProvider { get; set; }
-
-        public void VsTextViewCreated(IVsTextView textViewAdapter)
-        {
-            DTE2 dte = serviceProvider.GetService(typeof(DTE)) as DTE2;
-            IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-
-            textView.Properties.GetOrCreateSingletonProperty(() => new WhitespaceRemoverTarget(textViewAdapter, textView, dte));
-        }
-    }
-
-    class WhitespaceRemoverTarget : IOleCommandTarget
+    class WhitespaceRemoverCommand : IOleCommandTarget
     {
         private IOleCommandTarget _nextCommandTarget;
         private IWpfTextView _view;
         private DTE2 _dte;
 
-        public WhitespaceRemoverTarget(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte)
+        public WhitespaceRemoverCommand(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte)
         {
             textViewAdapter.AddCommandFilter(this, out _nextCommandTarget);
             _view = view;
@@ -55,7 +35,7 @@ namespace TrailingWhitespace
                 if (buffer.CheckEditAccess())
                 {
                     RemoveTrailingWhitespace(buffer);
-                    return 0;
+                    return VSConstants.S_OK;
                 }
             }
 
