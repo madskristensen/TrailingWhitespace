@@ -22,3 +22,9 @@ found in **Edit** -> **Advanced** or by using the shortcut key combination Ctrl+
 You can change the background color from the **Tools -> Options** dialog under the **Environment -> Fonts and Colors** settings. The setting is for the *Text Editor* and the display item is called *Trailing Whitespace*.
 
 ![VisualStudio2013OptionsDialog](artifacts/VisualStudioSettings.png "Visual Studio 2013 Options Dialog")
+
+#### Remove on save
+Every time a file is saved, all trailing whitespace is removed. This can be disabled in the
+**Tools -> Options** dialog.
+
+![Options dialog](artifacts/OptionsDialog.png)
