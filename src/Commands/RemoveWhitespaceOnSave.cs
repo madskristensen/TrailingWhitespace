@@ -17,7 +17,7 @@ namespace TrailingWhitespace
         private ITextDocument _document;
         private DTE2 _dte;
         private static Guid _cmdGgroup = typeof(VSConstants.VSStd97CmdID).GUID;
-        private static uint _cmdId = (uint)VSConstants.VSStd97CmdID.SaveProjectItem;
+        private static uint[] _cmdId = new[] { (uint)VSConstants.VSStd97CmdID.SaveProjectItem, (uint)VSConstants.VSStd97CmdID.SaveSolution };
 
         public RemoveWhitespaceOnSave(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte, ITextDocument document)
         {
@@ -29,7 +29,7 @@ namespace TrailingWhitespace
 
         public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (pguidCmdGroup == _cmdGgroup && nCmdID == _cmdId)
+            if (pguidCmdGroup == _cmdGgroup && _cmdId.Contains(nCmdID))
             {
                 if (!IsEnabled())
                     return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
