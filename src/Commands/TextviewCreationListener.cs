@@ -31,30 +31,6 @@ namespace TrailingWhitespace
             DTE2 dte = serviceProvider.GetService(typeof(DTE)) as DTE2;
             IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
 
-            // Add the view to the buffer propreties for the classifier
-            //textView.TextBuffer.Properties.GetOrCreateSingletonProperty(() => textView);
-
-            //var projection = textView.TextBuffer as IProjectionBuffer;
-            //if (projection != null)
-            //{
-            //    foreach (ITextBuffer buffer in projection.SourceBuffers)
-            //    {
-            //        TrailingClassifier classifier;
-            //        if (buffer.Properties.TryGetProperty(typeof(TrailingClassifier), out classifier))
-            //        {
-            //            classifier.SetTextView(textView);
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    TrailingClassifier classifier;
-            //    if (textView.TextBuffer.Properties.TryGetProperty(typeof(TrailingClassifier), out classifier))
-            //    {
-            //        classifier.SetTextView(textView);
-            //    }
-            //}
-
             textView.Properties.GetOrCreateSingletonProperty(() => new WhitespaceRemoverCommand(textViewAdapter, textView, dte));
 
             ITextDocument doc;
@@ -68,8 +44,6 @@ namespace TrailingWhitespace
         {
             foreach (var buffer in subjectBuffers)
             {
-                buffer.Properties.GetOrCreateSingletonProperty(() => textView);
-
                 TrailingClassifier classifier;
                 if (buffer.Properties.TryGetProperty(typeof(TrailingClassifier), out classifier))
                 {
@@ -79,7 +53,6 @@ namespace TrailingWhitespace
         }
 
         public void SubjectBuffersDisconnected(IWpfTextView textView, ConnectionReason reason, System.Collections.ObjectModel.Collection<ITextBuffer> subjectBuffers)
-        {
-        }
+        { }
     }
 }
