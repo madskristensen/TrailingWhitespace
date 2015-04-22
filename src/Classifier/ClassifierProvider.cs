@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 
 namespace TrailingWhitespace
@@ -30,19 +32,30 @@ namespace TrailingWhitespace
 
         public static string GetFileName(ITextBuffer buffer)
         {
-            Microsoft.VisualStudio.TextManager.Interop.IVsTextBuffer bufferAdapter;
-            buffer.Properties.TryGetProperty(typeof(Microsoft.VisualStudio.TextManager.Interop.IVsTextBuffer), out bufferAdapter);
+            IVsTextBuffer bufferAdapter;
+            if (!buffer.Properties.TryGetProperty(typeof(IVsTextBuffer), out bufferAdapter))
+                return null;
 
-            if (bufferAdapter != null)
+            if (bufferAdapter == null)
+                return null;
+
+            var persistFileFormat = bufferAdapter as IPersistFileFormat;
+
+            if (persistFileFormat == null)
+                return null;
+
+            string ppzsFilename = null;
+            uint iii;
+
+            try
             {
-                var persistFileFormat = bufferAdapter as IPersistFileFormat;
-                string ppzsFilename = null;
-                uint iii;
-                if (persistFileFormat != null) persistFileFormat.GetCurFile(out ppzsFilename, out iii);
+                persistFileFormat.GetCurFile(out ppzsFilename, out iii);
                 return ppzsFilename;
             }
-
-            return null;
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
