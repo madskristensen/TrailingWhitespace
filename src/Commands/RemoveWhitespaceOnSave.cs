@@ -50,7 +50,7 @@ namespace TrailingWhitespace
             if (!VSPackage.Options.RemoveWhitespaceOnSave)
                 return false;
 
-            string[] extensions = VSPackage.Options.IgnoreFileExtensions.Split(new [] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] extensions = VSPackage.Options.IgnoreFileExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             string fileExtension = Path.GetExtension(_document.FilePath);
 
             return !extensions.Any(ext => ext.Equals(fileExtension, StringComparison.OrdinalIgnoreCase));
@@ -80,6 +80,18 @@ namespace TrailingWhitespace
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
+            if (pguidCmdGroup == _cmdGgroup)
+            {
+                for (int i = 0; i < cCmds; i++)
+                {
+                    if (_cmdId.Contains(prgCmds[i].cmdID))
+                    {
+                        prgCmds[i].cmdf = (uint)(OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
+                        return VSConstants.S_OK;
+                    }
+                }
+            }
+
             return _nextCommandTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
     }
