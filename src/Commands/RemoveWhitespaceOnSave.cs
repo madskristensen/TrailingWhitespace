@@ -39,7 +39,6 @@ namespace TrailingWhitespace
                 if (buffer != null && buffer.CheckEditAccess())
                 {
                     RemoveTrailingWhitespace(buffer);
-                    Telemetry.TrackEvent("On save");
                 }
             }
 
@@ -59,6 +58,8 @@ namespace TrailingWhitespace
 
         private void RemoveTrailingWhitespace(ITextBuffer buffer)
         {
+            bool foundWhitespace = false;
+
             using (ITextEdit edit = buffer.CreateEdit())
             {
                 ITextSnapshot snap = edit.Snapshot;
@@ -72,11 +73,15 @@ namespace TrailingWhitespace
                     {
                         int start = line.Start.Position;
                         edit.Delete(start + length + 1, text.Length - length - 1);
+                        foundWhitespace = true;
                     }
                 }
 
                 edit.Apply();
             }
+
+            if (foundWhitespace)
+                Telemetry.TrackEvent("On save");
         }
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
