@@ -39,6 +39,7 @@ namespace TrailingWhitespace
                 if (buffer != null && buffer.CheckEditAccess())
                 {
                     RemoveTrailingWhitespace(buffer);
+                    Telemetry.TrackEvent("On save");
                 }
             }
 

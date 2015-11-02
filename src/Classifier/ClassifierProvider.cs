@@ -52,8 +52,9 @@ namespace TrailingWhitespace
                 persistFileFormat.GetCurFile(out ppzsFilename, out iii);
                 return ppzsFilename;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Log(ex);
                 return null;
             }
         }
