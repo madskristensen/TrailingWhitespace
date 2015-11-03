@@ -21,7 +21,6 @@ namespace TrailingWhitespace
 
         protected override void Initialize()
         {
-            Logger.Initialize(this, Title);
             Telemetry.Initialize(this, Version, "16cf8ed8-7f32-43bf-b14d-669b7cc0b348");
 
             Options = (Options)GetDialogPage(typeof(Options));

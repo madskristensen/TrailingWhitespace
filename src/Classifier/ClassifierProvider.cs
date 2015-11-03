@@ -54,7 +54,7 @@ namespace TrailingWhitespace
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Telemetry.TrackException(ex);
                 return null;
             }
         }
