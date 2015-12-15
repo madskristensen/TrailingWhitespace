@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="4c1a78e6-e7b8-4aa9-8812-4836e051ff6d" Version="2.0" Language="en-US" Publisher="Mads Kristensen" />
-    <DisplayName>Trailing Whitespace Visualizer</DisplayName>
-    <Description xml:space="preserve">Makes it easier than ever to identify and remove trailing whitespace in any code file</Description>
-    <License>Resources\License.txt</License>
-    <Icon>Resources\logo.png</Icon>
-    <PreviewImage>Resources\preview.png</PreviewImage>
-    <Tags>whitespace</Tags>
-  </Metadata>
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="12.0" />
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="14.0" />
-  </Installation>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-  </Assets>
+    <Metadata>
+        <Identity Id="4c1a78e6-e7b8-4aa9-8812-4836e051ff6d" Version="2.1" Language="en-US" Publisher="Mads Kristensen" />
+        <DisplayName>Trailing Whitespace Visualizer</DisplayName>
+        <Description xml:space="preserve">Makes it easier than ever to identify and remove trailing whitespace in any code file</Description>
+        <License>Resources\License.txt</License>
+        <Icon>Resources\logo.png</Icon>
+        <PreviewImage>Resources\preview.png</PreviewImage>
+        <Tags>whitespace</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="12.0" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="14.0" />
+    </Installation>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
 </PackageManifest>
