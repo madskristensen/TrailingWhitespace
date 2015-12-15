@@ -1,4 +1,4 @@
-## Trailing Whitespace extension for VS2012/2013/2015
+## Trailing Whitespace Visualizer
 
 [![Build status](https://ci.appveyor.com/api/projects/status/2n9cfl1lups6o7q4?svg=true)](https://ci.appveyor.com/project/madskristensen/trailingwhitespace)
 
@@ -17,10 +17,14 @@ You can very easily delete all the trailing whitespace in a file by executing th
 found in **Edit** -> **Advanced** or by using the shortcut key combination Ctrl+K, Ctrl+\
 
 ### Changing the background color
+You can change the background color from the
+**Tools -> Options** dialog under the
+**Environment -> Fonts and Colors** settings.
 
-You can change the background color from the **Tools -> Options** dialog under the **Environment -> Fonts and Colors** settings. The setting is for the *Text Editor* and the display item is called *Trailing Whitespace*.
+The setting is for the *Text Editor* and the display
+item is called *Trailing Whitespace*.
 
-![VisualStudio2013OptionsDialog](artifacts/VisualStudioSettings.png "Visual Studio 2013 Options Dialog")
+![Visual Studio Settings](artifacts/VisualStudioSettings.png)
 
 ### Ignore rules
 It's easy to add specify what file patterns to ignore. Any
