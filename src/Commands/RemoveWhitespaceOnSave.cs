@@ -30,7 +30,7 @@ namespace TrailingWhitespace
         {
             if (pguidCmdGroup == _cmdGgroup && _cmdId.Contains(nCmdID))
             {
-                ITextBuffer buffer = _view?.TextBuffer;
+                ITextBuffer buffer = _view.TextBuffer;
 
                 if (buffer == null || !IsEnabled(buffer))
                     return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
