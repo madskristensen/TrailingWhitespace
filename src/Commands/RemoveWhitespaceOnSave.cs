@@ -1,12 +1,11 @@
-﻿using EnvDTE80;
+﻿using System;
+using System.Linq;
+using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace TrailingWhitespace
 {
@@ -31,10 +30,10 @@ namespace TrailingWhitespace
         {
             if (pguidCmdGroup == _cmdGgroup && _cmdId.Contains(nCmdID))
             {
-                if (!IsEnabled())
-                    return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+                ITextBuffer buffer = _view?.TextBuffer;
 
-                ITextBuffer buffer = _view.TextBuffer;
+                if (buffer == null || !IsEnabled(buffer))
+                    return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
 
                 if (buffer != null && buffer.CheckEditAccess())
                 {
@@ -45,15 +44,12 @@ namespace TrailingWhitespace
             return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
 
-        private bool IsEnabled()
+        private bool IsEnabled(ITextBuffer buffer)
         {
             if (!VSPackage.Options.RemoveWhitespaceOnSave)
                 return false;
 
-            string[] extensions = VSPackage.Options.IgnoreFileExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string fileExtension = Path.GetExtension(_document.FilePath);
-
-            return !extensions.Any(ext => ext.Equals(fileExtension, StringComparison.OrdinalIgnoreCase));
+            return FileHelpers.IsFileSupported(buffer);
         }
 
         private void RemoveTrailingWhitespace(ITextBuffer buffer)
