@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Text.Projection;
 using System;
 using System.Collections.Generic;
 using System.Windows.Threading;
+using System.Threading.Tasks;
 
 namespace TrailingWhitespace
 {
@@ -62,15 +63,21 @@ namespace TrailingWhitespace
         }
 
 
-        public void SetTextView(IWpfTextView view)
+        public async Task SetTextView(IWpfTextView view)
         {
             if (_view != null)
                 return;
 
-            _view = view;
-            _view.Caret.PositionChanged += OnSomethingChanged;
-            _view.Closed += OnViewClosed;
-            UpdateCaret();
+            // Delay to allow Add Any File extension to place the caret
+            await Task.Delay(100);
+
+            if (_view == null)
+            {
+                _view = view;
+                _view.Caret.PositionChanged += OnSomethingChanged;
+                _view.Closed += OnViewClosed;
+                UpdateCaret();
+            }
         }
 
         private void OnViewClosed(object sender, EventArgs e)

@@ -40,14 +40,14 @@ namespace TrailingWhitespace
             }
         }
 
-        public void SubjectBuffersConnected(IWpfTextView textView, ConnectionReason reason, System.Collections.ObjectModel.Collection<ITextBuffer> subjectBuffers)
+        public async void SubjectBuffersConnected(IWpfTextView textView, ConnectionReason reason, System.Collections.ObjectModel.Collection<ITextBuffer> subjectBuffers)
         {
             foreach (var buffer in subjectBuffers)
             {
                 TrailingClassifier classifier;
                 if (buffer.Properties.TryGetProperty(typeof(TrailingClassifier), out classifier))
                 {
-                    classifier.SetTextView(textView);
+                    await classifier.SetTextView(textView);
                 }
             }
         }
