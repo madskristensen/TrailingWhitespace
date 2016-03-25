@@ -9,7 +9,7 @@ using TrailingWhitespace;
 [assembly: AssemblyProduct(Vsix.Name)]
 [assembly: AssemblyCopyright(Vsix.Author)]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyCulture(Vsix.Language)]
 [assembly: ComVisible(false)]
 
 [assembly: AssemblyVersion(Vsix.Version)]
