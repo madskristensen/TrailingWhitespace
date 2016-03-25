@@ -11,6 +11,7 @@ namespace TrailingWhitespace
         {
             RemoveWhitespaceOnSave = true;
             IgnorePatterns = @"\node_modules\, \bower_components\, \typings\, \lib\, .min., .md, .markdown";
+            IgnoreMiscFiles = false;
         }
 
         [Category("General")]
@@ -24,6 +25,12 @@ namespace TrailingWhitespace
         [Description("A comma-separated list of strings. Any file containing one of the strings in the path will be ignored.")]
         [DefaultValue(@"\node_modules\, \bower_components\, \typings\, \lib\, .min., .md, .markdown")]
         public string IgnorePatterns { get; set; }
+
+        [Category("General")]
+        [DisplayName("Ignore misc files")]
+        [Description("When true, whitespace in files that don't belong to the project will not be shown.")]
+        [DefaultValue(false)]
+        public bool IgnoreMiscFiles { get; set; }
 
         public IEnumerable<string> GetIgnorePatterns()
         {

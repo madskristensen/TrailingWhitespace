@@ -6,7 +6,7 @@ namespace TrailingWhitespace
         public const string Name = "Trailing Whitespace Visualizer";
         public const string Description = "Makes it easier than ever to identify and remove trailing whitespace in any code file";
         public const string Language = "en-US";
-        public const string Version = "2.2";
+        public const string Version = "2.3";
         public const string Author = "Mads Kristensen";
         public const string Tags = "whitespace";
     }

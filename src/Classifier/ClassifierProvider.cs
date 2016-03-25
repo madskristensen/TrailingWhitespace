@@ -8,7 +8,7 @@ namespace TrailingWhitespace
 {
     [Export(typeof(IClassifierProvider))]
     [ContentType("text")]
-    [TextViewRole(PredefinedTextViewRoles.Interactive)]
+    [TextViewRole(PredefinedTextViewRoles.PrimaryDocument)]
     class TrailingClassifierProvider : IClassifierProvider
     {
         [Import]
