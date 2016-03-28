@@ -10,7 +10,7 @@ namespace TrailingWhitespace
         public Options()
         {
             RemoveWhitespaceOnSave = true;
-            IgnorePatterns = @"\node_modules\, \bower_components\, \typings\, \lib\, .min., .md, .markdown";
+            IgnorePatterns = @"\node_modules\, \bower_components\, \typings\, \lib\, \Symbols\, .min., .md, .markdown";
             IgnoreMiscFiles = false;
         }
 
