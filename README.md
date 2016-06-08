@@ -2,8 +2,8 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/2n9cfl1lups6o7q4?svg=true)](https://ci.appveyor.com/project/madskristensen/trailingwhitespace)
 
-This extension will highlight any trailing whitespace on any line
-in any editor in Visual Studio.
+This extension will highlight and remove any trailing 
+whitespace on any line in any editor in Visual Studio.
 
 Download and install the extension from the
 [Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/a204e29b-1778-4dae-affd-209bea658a59)
