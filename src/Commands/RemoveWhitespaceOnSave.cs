@@ -54,8 +54,6 @@ namespace TrailingWhitespace
 
         private void RemoveTrailingWhitespace(ITextBuffer buffer)
         {
-            bool foundWhitespace = false;
-
             using (ITextEdit edit = buffer.CreateEdit())
             {
                 ITextSnapshot snap = edit.Snapshot;
@@ -64,20 +62,16 @@ namespace TrailingWhitespace
                 {
                     string text = line.GetText();
                     int length = text.Length;
-                    while (--length >= 0 && Char.IsWhiteSpace(text[length])) ;
+                    while (--length >= 0 && char.IsWhiteSpace(text[length])) ;
                     if (length < text.Length - 1)
                     {
                         int start = line.Start.Position;
                         edit.Delete(start + length + 1, text.Length - length - 1);
-                        foundWhitespace = true;
                     }
                 }
 
                 edit.Apply();
             }
-
-            if (foundWhitespace)
-                Telemetry.TrackEvent("On save");
         }
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)

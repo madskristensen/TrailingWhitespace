@@ -52,7 +52,6 @@
     <Compile Include="Commands\RemoveWhitespaceOnSave.cs" />
     <Compile Include="Commands\RemoveWhitespaceCommand.cs" />
     <Compile Include="Helpers\FileHelpers.cs" />
-    <Compile Include="Helpers\Telemetry.cs" />
     <Compile Include="Options.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -70,7 +69,6 @@
     <Compile Include="Commands\TextviewCreationListener.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
@@ -91,19 +89,15 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights, Version=1.2.0.5639, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.1.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=11.0.0.0" />
-    <Reference Include="Microsoft.VisualStudio.Editor, Version=11.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=12.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Editor, Version=12.0.0.0" />
     <Reference Include="Microsoft.VisualStudio.Language.StandardClassification" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0" />
-    <Reference Include="Microsoft.VisualStudio.Shell.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.VisualStudio.Shell.12.0">
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0" />
@@ -112,15 +106,15 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=11.0.0.0" />
-    <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=11.0.0.0" />
-    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=11.0.0.0" />
-    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=11.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=12.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=12.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=12.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=12.0.0.0" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="PresentationCore" />
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -166,7 +160,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

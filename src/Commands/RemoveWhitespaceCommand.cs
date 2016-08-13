@@ -30,7 +30,6 @@ namespace TrailingWhitespace
                 if (buffer.CheckEditAccess())
                 {
                     RemoveTrailingWhitespace(buffer);
-                    Telemetry.TrackEvent("Manually");
                     return VSConstants.S_OK;
                 }
             }

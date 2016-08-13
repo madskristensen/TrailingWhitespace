@@ -15,7 +15,10 @@ namespace TrailingWhitespace
 
         public static bool IsFileSupported(ITextBuffer buffer)
         {
-            // For some reason, the IClassifierProvider gets called twice. 
+            if (buffer == null || buffer.Properties == null)
+                return false;
+
+            // For some reason, the IClassifierProvider gets called twice.
             // Here we check if the value has been stored alewSY so we don't run twice.
             bool isEnabled;
             if (buffer.Properties.TryGetProperty(_propKey, out isEnabled))
@@ -31,7 +34,7 @@ namespace TrailingWhitespace
 
             if (patterns.Any(p => fileName.IndexOf(p, StringComparison.OrdinalIgnoreCase) > -1))
                 return PersistantReturnValue(buffer, false);
-            
+
             if (VSPackage.Options.IgnoreMiscFiles)
             {
                 var dte = (DTE2)Package.GetGlobalService(typeof(EnvDTE.DTE));
@@ -85,7 +88,7 @@ namespace TrailingWhitespace
             }
             catch (Exception ex)
             {
-                Telemetry.TrackException(ex);
+                System.Diagnostics.Debug.Write(ex);
                 return null;
             }
         }

@@ -21,8 +21,6 @@ namespace TrailingWhitespace
 
         protected override void Initialize()
         {
-            Telemetry.Initialize(this, Vsix.Version, "16cf8ed8-7f32-43bf-b14d-669b7cc0b348");
-
             Dte = (DTE2)GetService(typeof(DTE2));
             Options = (Options)GetDialogPage(typeof(Options));
 
