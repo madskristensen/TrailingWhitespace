@@ -51,6 +51,7 @@
     <Compile Include="Classifier\Classifier.cs" />
     <Compile Include="Commands\RemoveWhitespaceOnSave.cs" />
     <Compile Include="Commands\RemoveWhitespaceCommand.cs" />
+    <Compile Include="Commands\WhitespaceBase.cs" />
     <Compile Include="Helpers\FileHelpers.cs" />
     <Compile Include="Options.cs">
       <SubType>Component</SubType>

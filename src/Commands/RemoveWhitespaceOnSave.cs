@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 namespace TrailingWhitespace
 {
     class RemoveWhitespaceOnSave : WhitespaceBase
-    {        
+    {
         public RemoveWhitespaceOnSave(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte, ITextDocument document)
         {
             textViewAdapter.AddCommandFilter(this, out _nextCommandTarget);

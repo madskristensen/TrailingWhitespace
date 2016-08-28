@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -21,25 +22,31 @@ namespace TrailingWhitespace
             using (ITextEdit edit = buffer.CreateEdit())
             {
                 ITextSnapshot snap = edit.Snapshot;
-
+                bool isVerbatimString = false;
                 foreach (ITextSnapshotLine line in snap.Lines)
                 {
                     string text = line.GetText();
-                    int length = text.Length;
-                    while (--length >= 0 && Char.IsWhiteSpace(text[length])) ;
-                    if (length < text.Length - 1)
+                    if (text.Contains("@\"") && text.Count(f => f == '"') == 1)
+                        isVerbatimString = true;
+                    else if (isVerbatimString && text.Contains("\""))
+                        isVerbatimString = false;
+                    if (!isVerbatimString)
                     {
-                        int start = line.Start.Position;
-                        edit.Delete(start + length + 1, text.Length - length - 1);
+                        int length = text.Length;
+                        while (--length >= 0 && Char.IsWhiteSpace(text[length])) ;
+                        if (length < text.Length - 1)
+                        {
+                            int start = line.Start.Position;
+                            edit.Delete(start + length + 1, text.Length - length - 1);
+                        }
                     }
                 }
-
                 edit.Apply();
             }
         }
 
         abstract public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText);
 
-        abstract public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut);        
+        abstract public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut);
     }
 }
