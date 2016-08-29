@@ -12,6 +12,7 @@ namespace TrailingWhitespace
             RemoveWhitespaceOnSave = true;
             IgnorePatterns = @"\node_modules\, \bower_components\, \typings\, \lib\, \Symbols\, .min., .md, .markdown";
             IgnoreMiscFiles = false;
+            IgnoreVerbatimString = true;
         }
 
         [Category("General")]
@@ -31,6 +32,12 @@ namespace TrailingWhitespace
         [Description("When true, whitespace in files that don't belong to the project will not be shown.")]
         [DefaultValue(false)]
         public bool IgnoreMiscFiles { get; set; }
+
+        [Category("General")]
+        [DisplayName("Ignore Verbatim Strings")]
+        [Description("When true, whitespace in verbatim strings will not be removed.")]
+        [DefaultValue(true)]
+        public bool IgnoreVerbatimString { get; set; }
 
         public IEnumerable<string> GetIgnorePatterns()
         {

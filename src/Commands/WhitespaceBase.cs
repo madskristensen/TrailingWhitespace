@@ -26,10 +26,13 @@ namespace TrailingWhitespace
                 foreach (ITextSnapshotLine line in snap.Lines)
                 {
                     string text = line.GetText();
-                    if (text.Contains("@\"") && text.Count(f => f == '"') == 1)
-                        isVerbatimString = true;
-                    else if (isVerbatimString && text.Contains("\""))
-                        isVerbatimString = false;
+                    if (VSPackage.Options.IgnoreVerbatimString)
+                    {
+                        if (text.Contains("@\"") && text.Count(f => f == '"') == 1)
+                            isVerbatimString = true;
+                        else if (isVerbatimString && text.Contains("\""))
+                            isVerbatimString = false;
+                    }
                     if (!isVerbatimString)
                     {
                         int length = text.Length;
