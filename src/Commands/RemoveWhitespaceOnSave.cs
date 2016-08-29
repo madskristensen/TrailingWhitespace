@@ -9,15 +9,8 @@ using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace TrailingWhitespace
 {
-    class RemoveWhitespaceOnSave : IOleCommandTarget
+    class RemoveWhitespaceOnSave : WhitespaceBase
     {
-        private IOleCommandTarget _nextCommandTarget;
-        private IWpfTextView _view;
-        private ITextDocument _document;
-        private DTE2 _dte;
-        private static Guid _cmdGgroup = typeof(VSConstants.VSStd97CmdID).GUID;
-        private static uint[] _cmdId = new[] { (uint)VSConstants.VSStd97CmdID.SaveProjectItem, (uint)VSConstants.VSStd97CmdID.SaveSolution };
-
         public RemoveWhitespaceOnSave(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte, ITextDocument document)
         {
             textViewAdapter.AddCommandFilter(this, out _nextCommandTarget);
@@ -26,7 +19,7 @@ namespace TrailingWhitespace
             _document = document;
         }
 
-        public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        override public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
             if (pguidCmdGroup == _cmdGgroup && _cmdId.Contains(nCmdID))
             {
@@ -52,29 +45,7 @@ namespace TrailingWhitespace
             return FileHelpers.IsFileSupported(buffer);
         }
 
-        private void RemoveTrailingWhitespace(ITextBuffer buffer)
-        {
-            using (ITextEdit edit = buffer.CreateEdit())
-            {
-                ITextSnapshot snap = edit.Snapshot;
-
-                foreach (ITextSnapshotLine line in snap.Lines)
-                {
-                    string text = line.GetText();
-                    int length = text.Length;
-                    while (--length >= 0 && char.IsWhiteSpace(text[length])) ;
-                    if (length < text.Length - 1)
-                    {
-                        int start = line.Start.Position;
-                        edit.Delete(start + length + 1, text.Length - length - 1);
-                    }
-                }
-
-                edit.Apply();
-            }
-        }
-
-        public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
+        override public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
             if (pguidCmdGroup == _cmdGgroup)
             {
