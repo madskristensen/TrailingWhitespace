@@ -15,7 +15,15 @@ namespace TrailingWhitespace
         protected ITextDocument _document;
         protected DTE2 _dte;
         protected static Guid _cmdGgroup = typeof(VSConstants.VSStd97CmdID).GUID;
-        protected static uint[] _cmdId = new[] { (uint)VSConstants.VSStd97CmdID.SaveProjectItem, (uint)VSConstants.VSStd97CmdID.SaveSolution };
+        protected static uint[] _cmdId = new[]
+        {
+            (uint)VSConstants.VSStd97CmdID.SaveProjectItem,
+            (uint)VSConstants.VSStd97CmdID.SaveSolution,
+            (uint)VSConstants.VSStd97CmdID.BuildSln,
+            (uint)VSConstants.VSStd97CmdID.RebuildSln,
+            (uint)VSConstants.VSStd97CmdID.BuildSel,
+            (uint)VSConstants.VSStd97CmdID.RebuildSel
+        };
 
         protected static void RemoveTrailingWhitespace(ITextBuffer buffer)
         {
