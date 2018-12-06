@@ -84,6 +84,7 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows" />
@@ -111,7 +112,7 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Madskristensen.VisualStudio.SDK">
+    <PackageReference Include="Madskristensen.VisualStudio.SDK" ExcludeAssets="runtime">
       <Version>14.0.80-pre</Version>
     </PackageReference>
     <PackageReference Include="Madskristensen.VSSDK.Resourcer">

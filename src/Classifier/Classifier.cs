@@ -1,22 +1,22 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Threading;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
-using System;
-using System.Collections.Generic;
-using System.Windows.Threading;
-using System.Threading.Tasks;
 
 namespace TrailingWhitespace
 {
-    class TrailingClassifier : IClassifier
+    internal class TrailingClassifier : IClassifier
     {
-        private IClassificationType _whitespace;
+        private readonly IClassificationType _whitespace;
         private IWpfTextView _view;
-        private ITextBuffer _buffer;
+        private readonly ITextBuffer _buffer;
         private ITrackingSpan _span;
         private SnapshotPoint _caret, _lastCaret;
-        private static IList<ClassificationSpan> _empty = new List<ClassificationSpan>();
+        private static readonly IList<ClassificationSpan> _empty = new List<ClassificationSpan>();
 
         public TrailingClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {
@@ -28,7 +28,9 @@ namespace TrailingWhitespace
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
             if (span.IsEmpty || _view == null)
+            {
                 return _empty;
+            }
 
             IList<ClassificationSpan> list = new List<ClassificationSpan>();
             ITextSnapshotLine line = span.Snapshot.GetLineFromPosition(span.Start.Position);
@@ -39,14 +41,15 @@ namespace TrailingWhitespace
                 return _empty;
             }
 
-            IProjectionBuffer projection = span.Snapshot.TextBuffer as IProjectionBuffer;
-            if (projection != null)
+            if (span.Snapshot.TextBuffer is IProjectionBuffer projection)
             {
                 SnapshotPoint point = projection.CurrentSnapshot.MapToSourceSnapshot(line.Start + line.Length);
                 ITextSnapshotLine basePoint = point.Snapshot.GetLineFromPosition(point.Position);
 
                 if (basePoint.Length > line.Length)
+                {
                     return _empty;
+                }
             }
 
             string text = line.GetText();
@@ -55,7 +58,7 @@ namespace TrailingWhitespace
 
             if (diff > 0)
             {
-                SnapshotSpan ss = new SnapshotSpan(span.Snapshot, line.Start + line.Length - diff, diff);
+                var ss = new SnapshotSpan(span.Snapshot, line.Start + line.Length - diff, diff);
                 list.Add(new ClassificationSpan(ss, _whitespace));
             }
 
@@ -63,10 +66,12 @@ namespace TrailingWhitespace
         }
 
 
-        public async Task SetTextView(IWpfTextView view)
+        public async Task SetTextViewAsync(IWpfTextView view)
         {
             if (_view != null)
+            {
                 return;
+            }
 
             // Delay to allow Add Any File extension to place the caret
             await Task.Delay(100);
@@ -82,7 +87,7 @@ namespace TrailingWhitespace
 
         private void OnViewClosed(object sender, EventArgs e)
         {
-            ITextView view = (ITextView)sender;
+            var view = (ITextView)sender;
             view.Closed -= OnViewClosed;
             view.Caret.PositionChanged -= OnSomethingChanged;
 
@@ -99,25 +104,28 @@ namespace TrailingWhitespace
                 UpdateCaret();
 
                 if (_span != null)
+                {
                     OnClassificationChanged(_span);
-
+                }
             }), DispatcherPriority.ApplicationIdle, null);
         }
 
         private void UpdateCaret()
         {
             if (_view == null)
+            {
                 return;
+            }
 
             _lastCaret = _caret;
-            var position = _view.Caret.Position.BufferPosition;
+            SnapshotPoint position = _view.Caret.Position.BufferPosition;
 
             if (position == 0)
+            {
                 return;
+            }
 
-            var projection = _view.TextBuffer as IProjectionBuffer;
-
-            if (projection != null && position <= _view.TextBuffer.CurrentSnapshot.Length)
+            if (_view.TextBuffer is IProjectionBuffer projection && position <= _view.TextBuffer.CurrentSnapshot.Length)
             {
                 _caret = projection.CurrentSnapshot.MapToSourceSnapshot(position.Position);
             }

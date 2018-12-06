@@ -12,13 +12,13 @@ namespace TrailingWhitespace
     class TrailingClassifierProvider : IClassifierProvider
     {
         [Import]
-        public IClassificationTypeRegistryService registryService { get; set; }
+        public IClassificationTypeRegistryService RegistryService { get; set; }
 
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
             if (FileHelpers.IsFileSupported(textBuffer))
             {
-                return textBuffer.Properties.GetOrCreateSingletonProperty(() => new TrailingClassifier(registryService, textBuffer));
+                return textBuffer.Properties.GetOrCreateSingletonProperty(() => new TrailingClassifier(RegistryService, textBuffer));
             }
 
             return null;
