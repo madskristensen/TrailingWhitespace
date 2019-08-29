@@ -41,6 +41,7 @@ contained in it will be ignored:
 - .min.
 - .md
 - .markdown
+- .designer.
 
 You can modify these rules in the **Tools -> Options** dialog.
 
