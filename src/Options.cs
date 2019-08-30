@@ -10,7 +10,7 @@ namespace TrailingWhitespace
         public Options()
         {
             RemoveWhitespaceOnSave = true;
-            IgnorePatterns = @"\node_modules\, \bower_components\, \typings\, \lib\, \Symbols\, .min., .md, .markdown";
+            IgnorePatterns = @"\node_modules\, \bower_components\, \typings\, \lib\, \Symbols\, .min., .md, .markdown, .designer.";
             IgnoreMiscFiles = false;
             IgnoreVerbatimString = true;
         }
@@ -24,7 +24,7 @@ namespace TrailingWhitespace
         [Category("General")]
         [DisplayName("Ignore pattern")]
         [Description("A comma-separated list of strings. Any file containing one of the strings in the path will be ignored.")]
-        [DefaultValue(@"\node_modules\, \bower_components\, \typings\, \lib\, .min., .md, .markdown")]
+        [DefaultValue(@"\node_modules\, \bower_components\, \typings\, \lib\, .min., .md, .markdown, .designer.")]
         public string IgnorePatterns { get; set; }
 
         [Category("General")]
