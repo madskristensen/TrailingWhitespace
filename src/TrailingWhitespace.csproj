@@ -79,6 +79,7 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
+      <LastGenOutput>source.extension.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -102,9 +103,6 @@
     <Content Include="Resources\preview.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="source.extension.ico">
-      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
-    </Content>
     <VSCTCompile Include="VSCommandTable.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <Generator>VsctGenerator</Generator>
@@ -112,14 +110,11 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Madskristensen.VisualStudio.SDK" ExcludeAssets="runtime">
-      <Version>14.0.80-pre</Version>
-    </PackageReference>
-    <PackageReference Include="Madskristensen.VSSDK.Resourcer">
-      <Version>1.0.10</Version>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" ExcludeAssets="Runtime">
+      <Version>15.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>15.9.3032</Version>
+      <Version>17.0.1619-preview1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
