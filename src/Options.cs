@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.Shell;
-using System.ComponentModel;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using System.ComponentModel;
+using Microsoft.VisualStudio.Shell;
 
 namespace TrailingWhitespace
 {
@@ -39,14 +39,21 @@ namespace TrailingWhitespace
         [DefaultValue(true)]
         public bool IgnoreVerbatimString { get; set; }
 
+        private static string[] _cachedPatterns;
+        private static string _lastPatternString;
         public IEnumerable<string> GetIgnorePatterns()
         {
-            var raw = IgnorePatterns.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string pattern in raw)
+            if (_lastPatternString != IgnorePatterns || _cachedPatterns == null)
             {
-                yield return pattern.Trim();
+                _cachedPatterns = IgnorePatterns.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                for (var i = 0; i < _cachedPatterns.Length; i++)
+                {
+                    _cachedPatterns[i] = _cachedPatterns[i].Trim();
+                }
+
+                _lastPatternString = IgnorePatterns;
             }
+            return _cachedPatterns;
         }
     }
 }
