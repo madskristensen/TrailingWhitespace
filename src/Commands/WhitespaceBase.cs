@@ -24,10 +24,19 @@ namespace TrailingWhitespace
             (uint)VSConstants.VSStd97CmdID.RebuildSel
         };
 
+        [ThreadStatic]
+        internal static bool isRemovingWhitespace = false;
+
         protected static void RemoveTrailingWhitespace(ITextBuffer buffer, System.Collections.Generic.HashSet<int> modifiedLines = null)
         {
+            if (isRemovingWhitespace)
+                return;
+
             try
             {
+                // Prevent this from being recorded as a user change
+                isRemovingWhitespace = true;
+
                 using (ITextEdit edit = buffer.CreateEdit())
                 {
                     ITextSnapshot snap = edit.Snapshot;
@@ -74,16 +83,16 @@ namespace TrailingWhitespace
                             }
                         }
                     }
-
-                    // Prevent this from being recorded as a user change
-                    edit.Properties[typeof(RemoveWhitespaceOnSave)] = true;
-
                     _ = edit.Apply();
                 }
             }
             catch (Exception)
             {
                 // Some weird cases causes an error with multiple edits
+            }
+            finally
+            {
+                isRemovingWhitespace = false;
             }
         }
 
