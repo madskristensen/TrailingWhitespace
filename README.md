@@ -49,6 +49,8 @@ You can modify these rules in the **Tools -> Options** dialog.
 Every time a file is saved, all trailing whitespace is removed. This can be disabled in the
 **Tools -> Options** dialog.
 
+You can also choose to only remove trailing whitespace from lines that have been modified since the file was opened. This is useful when you are working on a file with a lot of existing trailing whitespace that you don't want to touch. This can also be configured in the **Tools -> Options** dialog.
+
 ![Options dialog](artifacts/OptionsDialog.png)
 
 ## Contribute
