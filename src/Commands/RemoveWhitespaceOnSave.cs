@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE80;
@@ -12,7 +13,7 @@ namespace TrailingWhitespace
 {
     internal class RemoveWhitespaceOnSave : WhitespaceBase
     {
-        private HashSet<int> _modifiedLines;
+        private BitArray _modifiedLines;
 
         public RemoveWhitespaceOnSave(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte, ITextDocument document)
         {
@@ -20,7 +21,7 @@ namespace TrailingWhitespace
             _view = view;
             _dte = dte;
             _document = document;
-            _modifiedLines = new HashSet<int>();
+            _modifiedLines = new BitArray(view.TextBuffer.CurrentSnapshot.LineCount);
             view.TextBuffer.Changed += OnBufferChanged;
             view.Closed += OnViewClosed;
         }
@@ -40,7 +41,7 @@ namespace TrailingWhitespace
                 if (buffer != null && buffer.CheckEditAccess())
                 {
                     RemoveTrailingWhitespace(buffer, _modifiedLines);
-                    _modifiedLines.Clear();
+                    _modifiedLines.SetAll(false);
                 }
             }
 
@@ -89,14 +90,19 @@ namespace TrailingWhitespace
             if (WhitespaceBase.isRemovingWhitespace)
                 return;
 
+            if (e.After.Lines.Count() != _modifiedLines.Length)
+            {
+                _modifiedLines.Length = e.After.Lines.Count();
+            }
+
             foreach (var change in e.Changes)
             {
-                int startLine = e.Before.GetLineNumberFromPosition(change.OldPosition);
-                int endLine = e.Before.GetLineNumberFromPosition(change.OldPosition + change.OldLength);
+                int startLine = e.After.GetLineNumberFromPosition(change.NewPosition);
+                int endLine = e.After.GetLineNumberFromPosition(change.NewPosition + change.NewLength);
 
                 for (int i = startLine; i <= endLine; i++)
                 {
-                    _modifiedLines.Add(i);
+                    _modifiedLines[i] = true;
                 }
             }
         }
