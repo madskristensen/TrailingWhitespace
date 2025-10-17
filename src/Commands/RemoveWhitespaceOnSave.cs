@@ -1,28 +1,29 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE80;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Differencing;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
+using TrailingWhitespace;
 
 namespace TrailingWhitespace
 {
     internal class RemoveWhitespaceOnSave : WhitespaceBase
     {
-        private BitArray _modifiedLines;
+        private readonly ITextDifferencingSelectorService _textDifferencingSelectorService;
 
-        public RemoveWhitespaceOnSave(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte, ITextDocument document)
+        public RemoveWhitespaceOnSave(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte, ITextDocument document, IVsEditorAdaptersFactoryService editorAdaptersFactoryService, ITextDifferencingSelectorService textDifferencingSelectorService, IDifferenceBufferFactoryService differenceBufferFactoryService)
         {
             _ = textViewAdapter.AddCommandFilter(this, out _nextCommandTarget);
             _view = view;
             _dte = dte;
             _document = document;
-            _modifiedLines = new BitArray(view.TextBuffer.CurrentSnapshot.LineCount);
-            view.TextBuffer.Changed += OnBufferChanged;
+            _textDifferencingSelectorService = textDifferencingSelectorService;
             view.Closed += OnViewClosed;
         }
 
@@ -40,12 +41,33 @@ namespace TrailingWhitespace
 
                 if (buffer != null && buffer.CheckEditAccess())
                 {
-                    RemoveTrailingWhitespace(buffer, _modifiedLines);
-                    _modifiedLines.SetAll(false);
+                    RemoveTrailingWhitespace(buffer, GetModifiedLines(buffer));
                 }
             }
 
             return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+        }
+
+        private IEnumerable<int> GetModifiedLines(ITextBuffer buffer)
+        {
+            if (!VSPackage.Options.OnlyRemoveFromModifiedLines)
+                return null;
+
+            var snapshot = buffer.CurrentSnapshot;
+            var uneditedSnapshot = buffer.GetLastSavedSnapshot();
+            if (snapshot == uneditedSnapshot)
+                return Enumerable.Empty<int>();
+
+            var diffService = _textDifferencingSelectorService.GetTextDifferencingService(buffer.ContentType);
+            var diff = diffService.DiffSnapshots(uneditedSnapshot, snapshot);
+
+            return diff.Differences.SelectMany(d =>
+            {
+                var span = d.Right;
+                int startLine = snapshot.GetLineNumberFromPosition(span.Start);
+                int endLine = snapshot.GetLineNumberFromPosition(span.End);
+                return Enumerable.Range(startLine, endLine - startLine + 1);
+            }).Distinct();
         }
 
         private bool IsEnabled(ITextBuffer buffer)
@@ -77,34 +99,7 @@ namespace TrailingWhitespace
         }
         private void OnViewClosed(object sender, EventArgs e)
         {
-            _view.TextBuffer.Changed -= OnBufferChanged;
             _view.Closed -= OnViewClosed;
-        }
-
-        private void OnBufferChanged(object sender, TextContentChangedEventArgs e)
-        {
-            if (!VSPackage.Options.OnlyRemoveFromModifiedLines)
-                return;
-
-            // If the change was caused by our own edit, then ignore it
-            if (WhitespaceBase.isRemovingWhitespace)
-                return;
-
-            if (e.After.Lines.Count() != _modifiedLines.Length)
-            {
-                _modifiedLines.Length = e.After.Lines.Count();
-            }
-
-            foreach (var change in e.Changes)
-            {
-                int startLine = e.After.GetLineNumberFromPosition(change.NewPosition);
-                int endLine = e.After.GetLineNumberFromPosition(change.NewPosition + change.NewLength);
-
-                for (int i = startLine; i <= endLine; i++)
-                {
-                    _modifiedLines[i] = true;
-                }
-            }
         }
     }
 }

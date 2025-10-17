@@ -27,7 +27,7 @@ namespace TrailingWhitespace
         [ThreadStatic]
         internal static bool isRemovingWhitespace = false;
 
-        protected static void RemoveTrailingWhitespace(ITextBuffer buffer, System.Collections.BitArray modifiedLines = null)
+        protected static void RemoveTrailingWhitespace(ITextBuffer buffer, System.Collections.Generic.IEnumerable<int> modifiedLines = null)
         {
             if (isRemovingWhitespace)
                 return;
@@ -43,7 +43,7 @@ namespace TrailingWhitespace
                     var isVerbatimString = false;
                     foreach (ITextSnapshotLine line in snap.Lines)
                     {
-                        if (VSPackage.Options.OnlyRemoveFromModifiedLines && !modifiedLines[line.LineNumber])
+                        if (VSPackage.Options.OnlyRemoveFromModifiedLines && modifiedLines != null && !modifiedLines.Contains(line.LineNumber))
                             continue;
 
                         var text = line.GetText();
