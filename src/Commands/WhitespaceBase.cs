@@ -24,7 +24,7 @@ namespace TrailingWhitespace
             (uint)VSConstants.VSStd97CmdID.RebuildSel
         };
 
-        protected static void RemoveTrailingWhitespace(ITextBuffer buffer)
+        protected static void RemoveTrailingWhitespace(ITextBuffer buffer, System.Collections.Generic.HashSet<int> modifiedLines = null)
         {
             try
             {
@@ -34,6 +34,9 @@ namespace TrailingWhitespace
                     var isVerbatimString = false;
                     foreach (ITextSnapshotLine line in snap.Lines)
                     {
+                        if (VSPackage.Options.OnlyRemoveFromModifiedLines && !modifiedLines.Contains(line.LineNumber))
+                            continue;
+
                         var text = line.GetText();
                         if (VSPackage.Options.IgnoreVerbatimString)
                         {
@@ -71,6 +74,10 @@ namespace TrailingWhitespace
                             }
                         }
                     }
+
+                    // Prevent this from being recorded as a user change
+                    edit.Properties[typeof(RemoveWhitespaceOnSave)] = true;
+
                     _ = edit.Apply();
                 }
             }
