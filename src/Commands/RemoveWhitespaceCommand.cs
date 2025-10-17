@@ -26,7 +26,7 @@ namespace TrailingWhitespace
 
                 if (buffer.CheckEditAccess())
                 {
-                    RemoveTrailingWhitespace(buffer);
+                    RemoveTrailingWhitespace(buffer, null);
                     return VSConstants.S_OK;
                 }
             }

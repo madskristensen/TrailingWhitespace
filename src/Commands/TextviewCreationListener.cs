@@ -26,6 +26,12 @@ namespace TrailingWhitespace
         [Import]
         public ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
 
+        [Import]
+        public ITextDifferencingSelectorService TextDifferencingSelectorService { get; set; }
+
+        [Import]
+        public IDifferenceBufferFactoryService DifferenceBufferFactoryService { get; set; }
+
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -36,7 +42,7 @@ namespace TrailingWhitespace
 
             if (TextDocumentFactoryService.TryGetTextDocument(textView.TextDataModel.DocumentBuffer, out ITextDocument doc))
             {
-                textView.Properties.GetOrCreateSingletonProperty(() => new RemoveWhitespaceOnSave(textViewAdapter, textView, dte, doc));
+                textView.Properties.GetOrCreateSingletonProperty(() => new RemoveWhitespaceOnSave(textViewAdapter, textView, dte, doc, EditorAdaptersFactoryService, TextDifferencingSelectorService, DifferenceBufferFactoryService));
             }
         }
 
