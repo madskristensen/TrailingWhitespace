@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EnvDTE80;
 using Microsoft.VisualStudio;
@@ -11,12 +12,17 @@ namespace TrailingWhitespace
 {
     internal class RemoveWhitespaceOnSave : WhitespaceBase
     {
+        private HashSet<int> _modifiedLines;
+
         public RemoveWhitespaceOnSave(IVsTextView textViewAdapter, IWpfTextView view, DTE2 dte, ITextDocument document)
         {
             _ = textViewAdapter.AddCommandFilter(this, out _nextCommandTarget);
             _view = view;
             _dte = dte;
             _document = document;
+            _modifiedLines = new HashSet<int>();
+            view.TextBuffer.Changed += OnBufferChanged;
+            view.Closed += OnViewClosed;
         }
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
@@ -33,7 +39,8 @@ namespace TrailingWhitespace
 
                 if (buffer != null && buffer.CheckEditAccess())
                 {
-                    RemoveTrailingWhitespace(buffer);
+                    RemoveTrailingWhitespace(buffer, _modifiedLines);
+                    _modifiedLines.Clear();
                 }
             }
 
@@ -66,6 +73,32 @@ namespace TrailingWhitespace
             }
 
             return _nextCommandTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
+        }
+        private void OnViewClosed(object sender, EventArgs e)
+        {
+            _view.TextBuffer.Changed -= OnBufferChanged;
+            _view.Closed -= OnViewClosed;
+        }
+
+        private void OnBufferChanged(object sender, TextContentChangedEventArgs e)
+        {
+            if (!VSPackage.Options.OnlyRemoveFromModifiedLines)
+                return;
+
+            // If the change was caused by our own edit, then ignore it
+            if (e.Edit.Properties.ContainsProperty(typeof(RemoveWhitespaceOnSave)))
+                return;
+
+            foreach (var change in e.Changes)
+            {
+                int startLine = e.Before.GetLineNumberFromPosition(change.OldPosition);
+                int endLine = e.Before.GetLineNumberFromPosition(change.OldPosition + change.OldLength);
+
+                for (int i = startLine; i <= endLine; i++)
+                {
+                    _modifiedLines.Add(i);
+                }
+            }
         }
     }
 }
