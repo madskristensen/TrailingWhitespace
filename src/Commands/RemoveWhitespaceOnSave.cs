@@ -86,7 +86,7 @@ namespace TrailingWhitespace
                 return;
 
             // If the change was caused by our own edit, then ignore it
-            if (e.Edit.Properties.ContainsProperty(typeof(RemoveWhitespaceOnSave)))
+            if (WhitespaceBase.isRemovingWhitespace)
                 return;
 
             foreach (var change in e.Changes)
