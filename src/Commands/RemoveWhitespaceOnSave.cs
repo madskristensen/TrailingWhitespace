@@ -49,6 +49,11 @@ namespace TrailingWhitespace
                     {
                         RemoveTrailingWhitespace(buffer);
                     }
+
+                    if (VSPackage.Options.TrimOnlyModifiedLines)
+                    {
+                        _view.Properties["InitialSnapshot"] = buffer.CurrentSnapshot;
+                    }
                 }
             }
 
