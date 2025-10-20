@@ -25,7 +25,7 @@ namespace TrailingWhitespace
             (uint)VSConstants.VSStd97CmdID.RebuildSel
         };
 
-        protected static void RemoveTrailingWhitespace(ITextBuffer buffer, HashSet<int> linesToTrim = null)
+        protected static void RemoveTrailingWhitespace(ITextBuffer buffer, HashSet<int> linesToIgnore = null)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace TrailingWhitespace
                     var isVerbatimString = false;
                     foreach (ITextSnapshotLine line in snap.Lines)
                     {
-                        if (linesToTrim != null && !linesToTrim.Contains(line.LineNumber))
+                        if (linesToIgnore != null && linesToIgnore.Contains(line.LineNumber))
                         {
                             continue;
                         }
