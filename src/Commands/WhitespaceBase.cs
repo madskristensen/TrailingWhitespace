@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using EnvDTE80;
 using Microsoft.VisualStudio;
@@ -25,7 +26,7 @@ namespace TrailingWhitespace
             (uint)VSConstants.VSStd97CmdID.RebuildSel
         };
 
-        protected static void RemoveTrailingWhitespace(ITextBuffer buffer, HashSet<int> linesToIgnore = null)
+        protected static void RemoveTrailingWhitespace(ITextBuffer buffer, BitArray linesToIgnore = null)
         {
             try
             {
@@ -35,7 +36,7 @@ namespace TrailingWhitespace
                     var isVerbatimString = false;
                     foreach (ITextSnapshotLine line in snap.Lines)
                     {
-                        if (linesToIgnore != null && linesToIgnore.Contains(line.LineNumber))
+                        if (linesToIgnore != null && linesToIgnore[line.LineNumber])
                         {
                             continue;
                         }
