@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE80;
@@ -82,18 +83,18 @@ namespace TrailingWhitespace
             return _nextCommandTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
 
-        private HashSet<int> GetUnchangedLines(ITextSnapshot snapA, ITextSnapshot snapB)
+        private BitArray GetUnchangedLines(ITextSnapshot snapA, ITextSnapshot snapB)
         {
             var linesA = snapA.Lines.Select(l => l.GetText()).ToArray();
             var linesB = snapB.Lines.Select(l => l.GetText()).ToArray();
-            var unchangedIndicesInB = new HashSet<int>();
+            var unchangedIndicesInB = new BitArray(linesB.Length);
 
             PatienceDiffRecursive(linesA, 0, linesA.Length, linesB, 0, linesB.Length, unchangedIndicesInB);
 
             return unchangedIndicesInB;
         }
 
-        private void PatienceDiffRecursive(string[] linesA, int startA, int endA, string[] linesB, int startB, int endB, HashSet<int> unchangedIndicesInB)
+        private void PatienceDiffRecursive(string[] linesA, int startA, int endA, string[] linesB, int startB, int endB, BitArray unchangedIndicesInB)
         {
             if (startA >= endA || startB >= endB)
                 return;
@@ -175,7 +176,7 @@ namespace TrailingWhitespace
             {
                 foreach (var match in lcs)
                 {
-                    unchangedIndicesInB.Add(match.Item2);
+                    unchangedIndicesInB[match.Item2] = true;
                 }
 
                 var lastMatchA = startA - 1;
@@ -195,7 +196,7 @@ namespace TrailingWhitespace
                 var standardLcsMatches = StandardLCS(linesA, startA, endA, linesB, startB, endB);
                 foreach (var match in standardLcsMatches)
                 {
-                    unchangedIndicesInB.Add(match.Item2);
+                    unchangedIndicesInB[match.Item2] = true;
                 }
             }
         }
