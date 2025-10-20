@@ -41,8 +41,8 @@ namespace TrailingWhitespace
                 {
                     if (VSPackage.Options.TrimOnlyModifiedLines && _view.Properties.TryGetProperty("InitialSnapshot", out ITextSnapshot initialSnapshot))
                     {
-                        var changedLines = GetChangedLines(initialSnapshot, buffer.CurrentSnapshot);
-                        RemoveTrailingWhitespace(buffer, changedLines);
+                        var unchangedLines = GetUnchangedLines(initialSnapshot, buffer.CurrentSnapshot);
+                        RemoveTrailingWhitespace(buffer, unchangedLines);
                     }
                     else
                     {
@@ -82,7 +82,7 @@ namespace TrailingWhitespace
             return _nextCommandTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
 
-        private HashSet<int> GetChangedLines(ITextSnapshot snapA, ITextSnapshot snapB)
+        private HashSet<int> GetUnchangedLines(ITextSnapshot snapA, ITextSnapshot snapB)
         {
             var linesA = snapA.Lines.Select(l => l.GetText()).ToArray();
             var linesB = snapB.Lines.Select(l => l.GetText()).ToArray();
@@ -90,16 +90,7 @@ namespace TrailingWhitespace
 
             PatienceDiffRecursive(linesA, 0, linesA.Length, linesB, 0, linesB.Length, unchangedIndicesInB);
 
-            var changedLines = new HashSet<int>();
-            for (int i = 0; i < linesB.Length; i++)
-            {
-                if (!unchangedIndicesInB.Contains(i))
-                {
-                    changedLines.Add(i);
-                }
-            }
-
-            return changedLines;
+            return unchangedIndicesInB;
         }
 
         private void PatienceDiffRecursive(string[] linesA, int startA, int endA, string[] linesB, int startB, int endB, HashSet<int> unchangedIndicesInB)
