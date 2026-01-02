@@ -51,6 +51,14 @@ Every time a file is saved, all trailing whitespace is removed. This can be disa
 
 ![Options dialog](artifacts/OptionsDialog.png)
 
+### Trim only modified lines
+
+A new option is available to only remove trailing whitespace from lines that have been added or modified since the file was opened. When this is enabled, lines that have not been touched will be ignored by the "remove on save" feature.
+
+This is useful for preserving history and blame information in source control, as it prevents cosmetic changes to old code.
+
+You can enable this feature in the **Tools -> Options -> Environment -> Trailing Whitespace** dialog by checking the "Trim only modified lines" option.
+
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)
 if you want to contribute to this project.
