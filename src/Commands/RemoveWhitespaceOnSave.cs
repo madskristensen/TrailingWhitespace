@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,16 +90,16 @@ namespace TrailingWhitespace
 
         private BitArray GetUnchangedLines(ITextSnapshot snapA, ITextSnapshot snapB)
         {
-            var linesA = snapA.Lines.Select(l => l.GetText()).ToArray();
-            var linesB = snapB.Lines.Select(l => l.GetText()).ToArray();
-            var unchangedIndicesInB = new BitArray(linesB.Length);
+            int lineCountA = snapA.LineCount;
+            int lineCountB = snapB.LineCount;
+            var unchangedIndicesInB = new BitArray(lineCountB);
 
-            PatienceDiffRecursive(linesA, 0, linesA.Length, linesB, 0, linesB.Length, unchangedIndicesInB);
+            PatienceDiffRecursive(snapA, 0, lineCountA, snapB, 0, lineCountB, unchangedIndicesInB);
 
             return unchangedIndicesInB;
         }
 
-        private void PatienceDiffRecursive(string[] linesA, int startA, int endA, string[] linesB, int startB, int endB, BitArray unchangedIndicesInB)
+        private void PatienceDiffRecursive(ITextSnapshot snapA, int startA, int endA, ITextSnapshot snapB, int startB, int endB, BitArray unchangedIndicesInB)
         {
             if (startA >= endA || startB >= endB)
                 return;
@@ -109,7 +109,7 @@ namespace TrailingWhitespace
             var countsA = new Dictionary<string, int>();
             for (int i = startA; i < endA; i++)
             {
-                var line = linesA[i];
+                var line = snapA.GetLineFromLineNumber(i).GetText();
                 if (!countsA.ContainsKey(line)) countsA[line] = 0;
                 countsA[line]++;
                 uniqueInA[line] = i;
@@ -121,7 +121,7 @@ namespace TrailingWhitespace
             var countsB = new Dictionary<string, int>();
             for (int i = startB; i < endB; i++)
             {
-                var line = linesB[i];
+                var line = snapB.GetLineFromLineNumber(i).GetText();
                 if (!countsB.ContainsKey(line)) countsB[line] = 0;
                 countsB[line]++;
                 uniqueInB[line] = i;
@@ -189,16 +189,16 @@ namespace TrailingWhitespace
 
                 foreach (var match in lcs)
                 {
-                    PatienceDiffRecursive(linesA, lastMatchA + 1, match.Item1, linesB, lastMatchB + 1, match.Item2, unchangedIndicesInB);
+                    PatienceDiffRecursive(snapA, lastMatchA + 1, match.Item1, snapB, lastMatchB + 1, match.Item2, unchangedIndicesInB);
                     lastMatchA = match.Item1;
                     lastMatchB = match.Item2;
                 }
 
-                PatienceDiffRecursive(linesA, lastMatchA + 1, endA, linesB, lastMatchB + 1, endB, unchangedIndicesInB);
+                PatienceDiffRecursive(snapA, lastMatchA + 1, endA, snapB, lastMatchB + 1, endB, unchangedIndicesInB);
             }
             else // No unique anchors, fallback to standard LCS for the whole block
             {
-                var standardLcsMatches = StandardLCS(linesA, startA, endA, linesB, startB, endB);
+                var standardLcsMatches = StandardLCS(snapA, startA, endA, snapB, startB, endB);
                 foreach (var match in standardLcsMatches)
                 {
                     unchangedIndicesInB[match.Item2] = true;
@@ -206,7 +206,7 @@ namespace TrailingWhitespace
             }
         }
 
-        private List<Tuple<int, int>> StandardLCS(string[] linesA, int startA, int endA, string[] linesB, int startB, int endB)
+        private List<Tuple<int, int>> StandardLCS(ITextSnapshot snapA, int startA, int endA, ITextSnapshot snapB, int startB, int endB)
         {
             var lenA = endA - startA;
             var lenB = endB - startB;
@@ -214,9 +214,11 @@ namespace TrailingWhitespace
 
             for (int i = 1; i <= lenA; i++)
             {
+                var lineA = snapA.GetLineFromLineNumber(startA + i - 1).GetText();
                 for (int j = 1; j <= lenB; j++)
                 {
-                    if (linesA[startA + i - 1] == linesB[startB + j - 1])
+                    var lineB = snapB.GetLineFromLineNumber(startB + j - 1).GetText();
+                    if (lineA == lineB)
                     {
                         dp[i, j] = dp[i - 1, j - 1] + 1;
                     }
@@ -231,7 +233,9 @@ namespace TrailingWhitespace
             int curA = lenA, curB = lenB;
             while (curA > 0 && curB > 0)
             {
-                if (linesA[startA + curA - 1] == linesB[startB + curB - 1])
+                var lineA = snapA.GetLineFromLineNumber(startA + curA - 1).GetText();
+                var lineB = snapB.GetLineFromLineNumber(startB + curB - 1).GetText();
+                if (lineA == lineB)
                 {
                     lcs.Add(new Tuple<int, int>(startA + curA - 1, startB + curB - 1));
                     curA--;
